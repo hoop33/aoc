@@ -48,12 +48,25 @@ const canContain = (bags, rules, color, count) => {
   return bags;
 };
 
+const carries = (multiplier, sum, rules, color) => {
+  const contains = rules[color];
+  for (const contain of contains) {
+    const m = multiplier * contain.count;
+    sum += m;
+    sum = carries(m, sum, rules, contain.color);
+  }
+  return sum;
+};
+
 const part1 = (rules) => {
   const bags = canContain([], rules, "shiny gold", 1);
   return bags.length;
 };
 
-const part2 = (rules) => {};
+const part2 = (rules) => {
+  const sum = carries(1, 0, rules, "shiny gold");
+  return sum;
+};
 
 const main = () => {
   const data = fs.readFileSync("input", "utf-8");
