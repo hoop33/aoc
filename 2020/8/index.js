@@ -17,13 +17,15 @@ const parse = (lines) => {
   return program;
 };
 
-const part1 = (program) => {
+const run = (program) => {
   let ip = 0,
     acc = 0;
 
   for (;;) {
+    if (ip >= program.length) return { acc, complete: true };
+
     const inst = program[ip];
-    if (inst.ec > 0) break;
+    if (inst.ec > 0) return { acc, complete: false };
 
     inst.ec++;
 
@@ -45,11 +47,45 @@ const part1 = (program) => {
         throw "syntax error";
     }
   }
-
-  return acc;
 };
 
-const part2 = (program) => {};
+const resetCounts = (program) => {
+  for (const inst of program) {
+    inst.ec = 0;
+  }
+};
+
+const part1 = (program) => {
+  return run(program).acc;
+};
+
+const part2 = (program) => {
+  for (const inst of program) {
+    let old = inst.op;
+    let res;
+
+    switch (inst.op) {
+      case "acc":
+        break;
+      case "jmp":
+        inst.op = "nop";
+        res = run(program);
+        break;
+      case "nop":
+        inst.op = "jmp";
+        res = run(program);
+        break;
+    }
+
+    inst.op = old;
+    if (res) {
+      resetCounts(program);
+      if (res.complete) {
+        return res.acc;
+      }
+    }
+  }
+};
 
 const main = () => {
   const data = fs.readFileSync("input", "utf-8");
@@ -58,6 +94,7 @@ const main = () => {
   const program = parse(lines);
 
   console.log(part1(program));
+  resetCounts(program);
   console.log(part2(program));
 };
 
