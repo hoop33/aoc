@@ -13,24 +13,23 @@ const part1 = (nums) => {
   return diffs[1] * diffs[3];
 };
 
-const countPaths = (index, nums, paths) => {
-  if (paths[index]) return paths[index];
-  if (index === nums.length - 1) return 1;
-
-  const num = nums[index];
-  let count = 0,
-    i = index + 1;
-  while (nums[i] - num <= 3) {
-    count += countPaths(i, nums, paths);
-    i++;
-  }
-
-  paths[index] = count;
-  return count;
-};
-
 const part2 = (nums) => {
-  return countPaths(0, nums, {});
+  const paths = {};
+  const countPaths = (index) => {
+    if (paths[index]) return paths[index];
+    if (index === nums.length - 1) return 1;
+
+    const num = nums[index];
+    let count = 0,
+      i = index + 1;
+    while (nums[i] - num <= 3) {
+      count += countPaths(i);
+      i++;
+    }
+    paths[index] = count;
+    return count;
+  };
+  return countPaths(0);
 };
 
 const main = () => {
