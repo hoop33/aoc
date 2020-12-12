@@ -21,36 +21,62 @@ const rotate = (ship, value) => {
   ship.facing = DIRECTIONS[(((current + value / 90) % len) + len) % len];
 };
 
+const rotateWaypoint = (ship, value) => {
+  const rad = (Math.PI / 180) * value;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const x = Math.round(cos * ship.waypoint.x - sin * ship.waypoint.y);
+  const y = Math.round(cos * ship.waypoint.y + sin * ship.waypoint.x);
+  ship.waypoint = { x, y };
+};
+
 const move = (ship, inst) => {
+  let x = 0,
+    y = 0;
   switch (inst.action) {
     case "N":
-      ship.y -= inst.value;
+      y = -inst.value;
       break;
     case "S":
-      ship.y += inst.value;
+      y = inst.value;
       break;
     case "E":
-      ship.x += inst.value;
+      x = inst.value;
       break;
     case "W":
-      ship.x -= inst.value;
+      x = -inst.value;
       break;
     case "L":
-      rotate(ship, -inst.value);
+      ship.waypoint
+        ? rotateWaypoint(ship, -inst.value)
+        : rotate(ship, -inst.value);
       break;
     case "R":
-      rotate(ship, inst.value);
+      ship.waypoint
+        ? rotateWaypoint(ship, inst.value)
+        : rotate(ship, inst.value);
       break;
     case "F":
-      move(ship, { action: ship.facing, value: inst.value });
+      if (ship.waypoint) {
+        ship.x += ship.waypoint.x * inst.value;
+        ship.y += ship.waypoint.y * inst.value;
+      } else {
+        move(ship, { action: ship.facing, value: inst.value });
+      }
       break;
     default:
       throw `no action in ${inst}`;
   }
+  if (ship.waypoint) {
+    ship.waypoint.x += x;
+    ship.waypoint.y += y;
+  } else {
+    ship.x += x;
+    ship.y += y;
+  }
 };
 
-const part1 = (lines) => {
-  const ship = { facing: "E", x: 0, y: 0 };
+const follow = (lines, ship) => {
   for (const line of lines) {
     const inst = parseInstruction(line);
     move(ship, inst);
@@ -58,8 +84,16 @@ const part1 = (lines) => {
   return manhattanDistance(ship);
 };
 
+const part1 = (lines) => {
+  return follow(lines, { facing: "E", x: 0, y: 0 });
+};
+
 const part2 = (lines) => {
-  return 0;
+  return follow(lines, {
+    x: 0,
+    y: 0,
+    waypoint: { x: 10, y: -1 },
+  });
 };
 
 const test = (data, expected1, expected2) => {
@@ -83,6 +117,6 @@ F7
 R90
 F11`,
   25,
-  0
+  286
 );
 main();
