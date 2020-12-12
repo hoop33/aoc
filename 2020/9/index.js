@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const canSum = (preamble, num) => {
@@ -45,16 +46,49 @@ const part2 = (nums, bad) => {
   }
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const nums = data
+const test = (data, expected1, pLen1, expected2) => {
+  const bad = part1(parseData(data), pLen1);
+  assert.equal(bad, expected1);
+  assert.equal(part2(parseData(data), bad), expected2);
+};
+
+const parseData = (data) =>
+  data
     .split(/\r?\n/)
     .filter((el) => el.length > 0)
     .map((el) => +el);
 
-  const bad = part1(nums, 25);
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  const bad = part1(parseData(data), 25);
   console.log(bad);
-  console.log(part2(nums, bad));
+  console.log(part2(parseData(data), bad));
 };
 
+test(
+  `35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576`,
+  127,
+  5,
+  62
+);
 main();
