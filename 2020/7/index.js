@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const parsePredicate = (predicate) => {
@@ -68,13 +69,32 @@ const part2 = (rules) => {
   return sum;
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const lines = data.split(/\r?\n/).filter((el) => el.length > 0);
+const parseData = (data) =>
+  parseRules(data.split(/\r?\n/).filter((el) => el.length > 0));
 
-  const rules = parseRules(lines);
-  console.log(part1(rules));
-  console.log(part2(rules));
+const test = (data, expected1, expected2) => {
+  assert.equal(part1(parseData(data)), expected1);
+  assert.equal(part2(parseData(data)), expected2);
 };
 
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  console.log(part1(parseData(data)));
+  console.log(part2(parseData(data)));
+};
+
+test(
+  `light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags.`,
+  4,
+  32
+);
 main();
