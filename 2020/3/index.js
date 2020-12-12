@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const traverse = (lines, right, down) => {
@@ -42,12 +43,33 @@ const part2 = (lines) => {
   return total;
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const lines = data.split(/\r?\n/).filter((el) => el.length > 0);
-
-  console.log(part1(lines));
-  console.log(part2(lines));
+const test = (data, expected1, expected2) => {
+  assert.equal(part1(parseData(data)), expected1);
+  assert.equal(part2(parseData(data)), expected2);
 };
 
+const parseData = (data) => data.split(/\r?\n/).filter((el) => el.length > 0);
+
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  console.log(part1(parseData(data)));
+  console.log(part2(parseData(data)));
+};
+
+test(
+  `..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#`,
+  7,
+  336
+);
 main();
