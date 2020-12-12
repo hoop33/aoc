@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const isValid = (passport) => {
@@ -113,12 +114,35 @@ const part2 = (lines) => {
   return valid;
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const lines = data.split(/\r?\n/);
-
-  console.log(part1(lines));
-  console.log(part2(lines));
+const test = (data, expected1, expected2) => {
+  assert.equal(part1(parseData(data)), expected1);
+  assert.equal(part2(parseData(data)), expected2);
 };
 
+const parseData = (data) => data.split(/\r?\n/);
+
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  console.log(part1(parseData(data)));
+  console.log(part2(parseData(data)));
+};
+
+test(
+  `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+byr:1937 iyr:2017 cid:147 hgt:183cm
+
+iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+hcl:#cfa07d byr:1929
+
+hcl:#ae17e1 iyr:2013
+eyr:2024
+ecl:brn pid:760753108 byr:1931
+hgt:179cm
+
+hcl:#cfa07d eyr:2025 pid:166559648
+iyr:2011 ecl:brn hgt:59in`,
+  2,
+  2
+);
 main();
