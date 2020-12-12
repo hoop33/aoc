@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const part1 = (lines) => {
@@ -40,12 +41,38 @@ const part2 = (lines) => {
   return sum;
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const lines = data.split(/\r?\n/);
-
-  console.log(part1(lines));
-  console.log(part2(lines));
+const test = (data, expected1, expected2) => {
+  assert.equal(part1(parseData(data)), expected1);
+  assert.equal(part2(parseData(data)), expected2);
 };
 
+const parseData = (data) => data.split(/\r?\n/);
+
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  console.log(part1(parseData(data)));
+  console.log(part2(parseData(data)));
+};
+
+test(
+  `abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b
+`,
+  11,
+  6
+);
 main();
