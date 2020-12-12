@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const parse = (lines) => {
@@ -49,14 +50,14 @@ const run = (program) => {
   }
 };
 
+const part1 = (program) => {
+  return run(program).acc;
+};
+
 const resetCounts = (program) => {
   for (const inst of program) {
     inst.ec = 0;
   }
-};
-
-const part1 = (program) => {
-  return run(program).acc;
 };
 
 const part2 = (program) => {
@@ -87,15 +88,32 @@ const part2 = (program) => {
   }
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const lines = data.split(/\r?\n/).filter((el) => el.length > 0);
-
-  const program = parse(lines);
-
-  console.log(part1(program));
-  resetCounts(program);
-  console.log(part2(program));
+const test = (data, expected1, expected2) => {
+  assert.equal(part1(parseData(data)), expected1);
+  assert.equal(part2(parseData(data)), expected2);
 };
 
+const parseData = (data) =>
+  parse(data.split(/\r?\n/).filter((el) => el.length > 0));
+
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  console.log(part1(parseData(data)));
+  console.log(part2(parseData(data)));
+};
+
+test(
+  ` nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6`,
+  5,
+  8
+);
 main();
