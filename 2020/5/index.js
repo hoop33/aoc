@@ -1,3 +1,4 @@
+const assert = require("assert");
 const fs = require("fs");
 
 const findSeat = (data) => {
@@ -63,12 +64,21 @@ const part2 = (lines) => {
   }
 };
 
-const main = () => {
-  const data = fs.readFileSync("input", "utf-8");
-  const lines = data.split(/\r?\n/).filter((el) => el.length > 0);
-
-  console.log(part1(lines));
-  console.log(part2(lines));
+const test = (data, expected) => {
+  assert.equal(part1(parseData(data)), expected);
 };
 
+const parseData = (data) => data.split(/\r?\n/).filter((el) => el.length > 0);
+
+const main = () => {
+  const data = fs.readFileSync("input", "utf-8");
+
+  console.log(part1(parseData(data)));
+  console.log(part2(parseData(data)));
+};
+
+test("FBFBBFFRLR", 357);
+test("BFFFBBFRRR", 567);
+test("FFFBBBFRRR", 119);
+test("BBFFBBFRLL", 820);
 main();
