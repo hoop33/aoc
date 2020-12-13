@@ -9,13 +9,33 @@ const part1 = ([earliest, ids]) => {
   }
 };
 
-const part2 = (lines) => {
-  return 0;
+const merge = (ids) => {
+  const buses = [];
+  for (let i = 0; i < ids.length; i++) {
+    if (typeof ids[i] === "number") {
+      buses.push({
+        id: ids[i],
+        ts: i,
+      });
+    }
+  }
+  return buses;
+};
+
+const part2 = ([_, ids]) => {
+  let i = 0,
+    mult = 1;
+
+  for (const bus of merge(ids)) {
+    while ((i + bus.ts) % bus.id !== 0) i += mult;
+    mult *= bus.id;
+  }
+  return i;
 };
 
 const test = (data, expected1, expected2) => {
   assert.equal(part1(parseData(data)), expected1);
-  assert.equal(part2(parseData(data)), expected2);
+  assert.equal(part2(parseData(data), 0), expected2);
 };
 
 const parseData = (data) => {
@@ -34,6 +54,6 @@ test(
   `939
 7,13,x,x,59,x,31,19`,
   295,
-  0
+  1068781
 );
 main();
