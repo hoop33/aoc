@@ -35,7 +35,7 @@ const part2 = ([_, ids]) => {
 
 const test = (data, expected1, expected2) => {
   assert.equal(part1(parseData(data)), expected1);
-  assert.equal(part2(parseData(data), 0), expected2);
+  assert.equal(part2(parseData(data)), expected2);
 };
 
 const parseData = (data) => {
