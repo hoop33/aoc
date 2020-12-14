@@ -14,16 +14,14 @@ const maskedAddrs = (addr, mask) => {
   let addrs = [""];
   const bin = addr.toString(2).padStart(mask.length, "0");
   for (let i = 0; i < mask.length; i++) {
-    if (mask[i] === "X") {
-      addrs = addrs.concat(addrs.slice());
-      for (let j = 0; j < addrs.length; j++) {
-        addrs[j] += j < addrs.length / 2 ? "0" : "1";
+    if (mask[i] === "X") addrs = addrs.concat(addrs.slice());
+
+    let next = mask[i] === "0" ? bin[i] : mask[i];
+    for (let j = 0; j < addrs.length; j++) {
+      if (mask[i] === "X") {
+        next = j < addrs.length / 2 ? "0" : "1";
       }
-    } else {
-      const next = mask[i] === "0" ? bin[i] : mask[i];
-      for (let j = 0; j < addrs.length; j++) {
-        addrs[j] += next;
-      }
+      addrs[j] += next;
     }
   }
 
