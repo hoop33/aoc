@@ -29,10 +29,8 @@ const part2 = (lines) => {
     if (matches) {
       const c1 = matches[4][+matches[1] - 1];
       const c2 = matches[4][+matches[2] - 1];
-      if (
-        (c1 === matches[3] && c2 !== matches[3]) ||
-        (c1 !== matches[3] && c2 === matches[3])
-      ) {
+      const c3 = matches[3];
+      if (c1 !== c2 && (c1 === c3 || c2 === c3)) {
         valid++;
       }
     } else {
