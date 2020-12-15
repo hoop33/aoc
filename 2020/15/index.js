@@ -1,32 +1,34 @@
 const assert = require("assert");
-const fs = require("fs");
 
-const next = (nums) => {
-  const lastNumSpoken = nums[nums.length - 1];
+const numberForTurn = (num, seed) => {
+  const len = seed.length;
 
-  const times = nums.reduce((acc, el, index) => {
-    if (el === lastNumSpoken) acc.push(index);
-    return acc;
-  }, []);
+  const cache = new Map();
+  for (let i = 0; i < len; i++) {
+    cache.set(seed[i], i + 1);
+  }
 
-  if (times.length === 1) return 0;
-  else return times[times.length - 1] - times[times.length - 2];
+  let last = seed[len - 1];
+
+  for (let turn = len + 1; turn <= num; turn++) {
+    const next = cache.has(last) ? turn - cache.get(last) - 1 : 0;
+    cache.set(last, turn - 1);
+    last = next;
+  }
+
+  return last;
 };
 
 const part1 = (nums) => {
-  for (let i = nums.length; i < 2020; i++) {
-    nums.push(next(nums));
-  }
-  return nums[nums.length - 1];
+  return numberForTurn(2020, nums);
 };
 
-const part2 = (lines) => {
-  return 0;
+const part2 = (nums) => {
+  return numberForTurn(30000000, nums);
 };
 
-const test = (data, expected1, expected2) => {
-  assert.equal(part1(parseData(data)), expected1);
-  assert.equal(part2(parseData(data)), expected2);
+const test = (data, expected) => {
+  assert.equal(part1(parseData(data)), expected);
 };
 
 const parseData = (data) => data.split(/,/).map((el) => +el);
