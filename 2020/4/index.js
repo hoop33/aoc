@@ -3,18 +3,6 @@ const fs = require("fs");
 
 const isValid = (passport) => {
   return (
-    passport.byr &&
-    passport.iyr &&
-    passport.eyr &&
-    passport.hgt &&
-    passport.hcl &&
-    passport.ecl &&
-    passport.pid
-  );
-};
-
-const isValid2 = (passport) => {
-  return (
     hasAllFields(passport) &&
     birthYearValid(+passport.byr) &&
     issueYearValid(+passport.iyr) &&
@@ -82,7 +70,7 @@ const part1 = (lines) => {
   let passport = {};
   for (const line of lines) {
     if (line.trim().length === 0) {
-      if (isValid(passport)) valid++;
+      if (hasAllFields(passport)) valid++;
       passport = {};
     } else {
       const tokens = line.split(" ").filter((el) => el.length > 0);
@@ -101,7 +89,7 @@ const part2 = (lines) => {
   let passport = {};
   for (const line of lines) {
     if (line.trim().length === 0) {
-      if (isValid2(passport)) valid++;
+      if (isValid(passport)) valid++;
       passport = {};
     } else {
       const tokens = line.split(" ").filter((el) => el.length > 0);
